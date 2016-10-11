@@ -117,23 +117,23 @@ Die Druckvorlage ist mit dem Tool "Gimp2" erstellt. Diese ist unter resources zu
 
 ## History
 Author:     Martin Steppuhn
-* 18.12.2009 Initial version
+* 18.12.2009 Initial version  
 
-Editor:		  Lars Weimar
-* 06.10.2016 
+Editor:		  Lars Weimar  
+* 06.10.2016  
 Update to Atmel Studio 7  
 Delete uart routine  
 
-*07.10.2016 ver.0.0.1
+*07.10.2016 ver.0.0.1  
 Moved Word lines to get Alarm1 and Alarm2 to bottom  
 Added Alarm1 and Alarm2 Vars and Words  
 Added routines to set alarm times  
-* 08.10.2016 ver.0.0.2
+* 08.10.2016 ver.0.0.2  
 Added ADC to get 2 more inputs on ADC6, ADC7  
 Added UP/DOWN buttons  
-* 09.10.2016 ver.0.0.3
+* 09.10.2016 ver.0.0.3  
 Added EEPROM to save alarm times  
-* 09.10.2016 ver.0.0.4
+* 09.10.2016 ver.0.0.4  
 Changed to 24h clock  
 Bugfix alarm  
 ## Quellen
