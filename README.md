@@ -135,7 +135,8 @@ Added UP/DOWN buttons
 Added EEPROM to save alarm times  
 * 09.10.2016 ver.0.0.4  
 Changed to 24h clock  
-Bugfix alarm  
+Bugfix alarm
+
 ## Quellen
 Schaltplan: http://www.elo-web.de/xattachment/0911PingPongSchaltbild.jpg  
 Ursprungs C-Code: www.emsystech.de  
