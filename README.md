@@ -108,6 +108,10 @@ Mit langen Druck auf den Taster PD2 kommt man in die Einstellungen. Das Menü si
 ## Druckvorlage
 Die Druckvorlage ist mit dem Tool "Gimp2" erstellt. Diese ist unter resources zu finden.
 
+## ToDo
+Ich habe noch geplant, die Uhrzeit per ESP8266 mit NTP zu synchronisieren.  
+Die ganze Elektronik wird dann noch in einen ordentlichen Rahmen (z.B. Ikea) eingebaut und mit Difusor, Separator und Glasfront verschönert.
+
 ## Contributing
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
