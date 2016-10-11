@@ -124,7 +124,7 @@ Editor:		  Lars Weimar
 Update to Atmel Studio 7  
 Delete uart routine  
 
-*07.10.2016 ver.0.0.1  
+* 07.10.2016 ver.0.0.1  
 Moved Word lines to get Alarm1 and Alarm2 to bottom  
 Added Alarm1 and Alarm2 Vars and Words  
 Added routines to set alarm times  
