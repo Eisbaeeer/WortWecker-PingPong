@@ -47,6 +47,13 @@
 // History:		09.10.2016 ver.0.0.4
 //				- Changed to 24h clock
 //				- Bugfix alarm
+// History:		03.11.2016 ver.0.0.5
+//				- Changed pins to get the UART ports free
+// History:		03.11.2016 ver.0.0.6
+//				- add UART for NTP
+// History:		06.11.2016 ver.0.0.7
+//				- add NTP sync
+//				- Bugfix time & alarm setting
 //
 //------------------------------------------------------------------------------
 
@@ -59,62 +66,73 @@
 
 /**** Preprocessing directives (#define) **************************************/
 
+//=== CPU ===
+#define F_CPU       8000000UL
+
 //=== Portpins ===
 
-#define		DATA_SET		PORTB |=  (1<<4)
-#define		DATA_CLR		PORTB &= ~(1<<4)
+#define		DATA_SET		PORTB |=  (1<<PB4)
+#define		DATA_CLR		PORTB &= ~(1<<PB4)
 
-#define		CLK_SET		PORTB |=  (1<<3)
-#define		CLK_CLR		PORTB &= ~(1<<3)
+#define		CLK_SET		PORTB |=  (1<<PB3)
+#define		CLK_CLR		PORTB &= ~(1<<PB3)
 
-#define		STROBE_SET	PORTB |=  (1<<2)
-#define		STROBE_CLR	PORTB &= ~(1<<2)
+#define		STROBE_SET	PORTB |=  (1<<PB2)
+#define		STROBE_CLR	PORTB &= ~(1<<PB2)
 
 #define		BUTTON			(!(PIND & (1<<PD2)))
-#define     UP				(!(PIND & (1<<PD0)))
-#define     DOWN			(!(PIND & (1<<PD1)))
+#define     UP				(!(PINC & (1<<PC4)))
+#define     DOWN			(!(PINC & (1<<PC5)))
+
+#define		BUZZER_TOGGLE	PORTD ^= (1<<PD3)
+#define		BUZZER_OFF		PORTD &= ~(1<<PD3)
+#define		BUZZER_ON		PORTD |= (1<<PD3)
+
+
+//=== UART ===
+#define BAUD        9600UL
+#define UBRR_BAUD   ((F_CPU/(16UL*BAUD))-1)
+
 
 //=== Pixels ===
 
-#define		CLEAR_ALL	led[0]=0; led[1]=0; led[2]=0; led[3]=0;	led[4]=0; led[5]=0; led[6]=0; led[7]=0; led[8]=0;	led[9]=0; led[10]=0; led[11]=0
+#define		CLEAR_ALL			led[0]=0; led[1]=0; led[2]=0; led[3]=0;	led[4]=0; led[5]=0; led[6]=0; led[7]=0; led[8]=0;	led[9]=0; led[10]=0; led[11]=0
 
 // Zeile 1
 #define		WORD_ES_IST			led[0]|=1; led[1]|=1; led[4]|=1; led[5]|=1; led[6]|=1
-#define		WORD_ZEHN				led[8]|=1; led[9]|=1; led[10]|=1; led[11]|=1
+#define		WORD_ZEHN			led[8]|=1; led[9]|=1; led[10]|=1; led[11]|=1
 // Zeile 2
 #define		WORD_FUENF			led[1]|=0x02; led[2]|=0x02; led[3]|=0x02; led[4]|=0x02
 #define		WORD_VOR_1			led[6]|=0x02; led[7]|=0x02; led[8]|=0x02
 // Zeile 3
 #define		WORD_VIERTEL		led[5]|=0x04; led[6]|=0x04; led[7]|=0x04; led[8]|=0x04; led[9]|=0x04; led[10]|=0x04; led[11]|=0x04
 // Zeile 4
-#define		WORD_NACH				led[0]|=0x08; led[1]|=0x08; led[2]|=0x08; led[3]|=0x08
+#define		WORD_NACH			led[0]|=0x08; led[1]|=0x08; led[2]|=0x08; led[3]|=0x08
 #define		WORD_VOR_2			led[4]|=0x08; led[5]|=0x08; led[6]|=0x08
-#define		WORD_HALB				led[8]|=0x08; led[9]|=0x08; led[10]|=0x08; led[11]|=0x08
+#define		WORD_HALB			led[8]|=0x08; led[9]|=0x08; led[10]|=0x08; led[11]|=0x08
 // Zeile 5
-#define		WORD_5					led[0]|=0x10; led[1]|=0x10; led[2]|=0x10; led[3]|=0x10
-#define		WORD_2					led[6]|=0x10; led[7]|=0x10; led[8]|=0x10; led[9]|=0x10
-#define		WORD_1					led[8]|=0x10; led[9]|=0x10; led[10]|=0x10; led[11]|=0x10
+#define		WORD_5				led[0]|=0x10; led[1]|=0x10; led[2]|=0x10; led[3]|=0x10
+#define		WORD_2				led[6]|=0x10; led[7]|=0x10; led[8]|=0x10; led[9]|=0x10
+#define		WORD_1				led[8]|=0x10; led[9]|=0x10; led[10]|=0x10; led[11]|=0x10
 // Zeile 6
-#define		WORD_7					led[0]|=0x20; led[1]|=0x20; led[2]|=0x20; led[3]|=0x20; led[4]|=0x20; led[5]|=0x20
-#define		WORD_6					led[7]|=0x20; led[8]|=0x20; led[9]|=0x20; led[10]|=0x20; led[11]|=0x20
+#define		WORD_7				led[0]|=0x20; led[1]|=0x20; led[2]|=0x20; led[3]|=0x20; led[4]|=0x20; led[5]|=0x20
+#define		WORD_6				led[7]|=0x20; led[8]|=0x20; led[9]|=0x20; led[10]|=0x20; led[11]|=0x20
 // Zeile 7
-#define		WORD_10					led[0]|=0x40; led[1]|=0x40; led[2]|=0x40; led[3]|=0x40
-#define		WORD_9 					led[3]|=0x40; led[4]|=0x40; led[5]|=0x40; led[6]|=0x40
-#define		WORD_4					led[8]|=0x40; led[9]|=0x40; led[10]|=0x40; led[11]|=0x40
+#define		WORD_10				led[0]|=0x40; led[1]|=0x40; led[2]|=0x40; led[3]|=0x40
+#define		WORD_9 				led[3]|=0x40; led[4]|=0x40; led[5]|=0x40; led[6]|=0x40
+#define		WORD_4				led[8]|=0x40; led[9]|=0x40; led[10]|=0x40; led[11]|=0x40
 // Zeile 8
-#define		WORD_3					led[0]|=0x80; led[1]|=0x80; led[2]|=0x80; led[3]|=0x80
-#define		WORD_11					led[4]|=0x80; led[5]|=0x80; led[6]|=0x80
-#define		WORD_8					led[8]|=0x80; led[9]|=0x80; led[10]|=0x80; led[11]|=0x80
+#define		WORD_3				led[0]|=0x80; led[1]|=0x80; led[2]|=0x80; led[3]|=0x80
+#define		WORD_11				led[4]|=0x80; led[5]|=0x80; led[6]|=0x80
+#define		WORD_8				led[8]|=0x80; led[9]|=0x80; led[10]|=0x80; led[11]|=0x80
 // Zeile 9
-#define		WORD_12					led[1]|=0x100; led[2]|=0x100; led[3]|=0x100; led[4]|=0x100; led[5]|=0x100
-#define		WORD_UHR				led[9]|=0x100; led[10]|=0x100; led[11]|=0x100
-#define		WORD_FUNKUHR		led[5]|=0x100; led[6]|=0x100; led[7]|=0x100; led[8]|=0x100; led[9]|=0x100; led[10]|=0x100; led[11]|=0x100
+#define		WORD_12				led[1]|=0x100; led[2]|=0x100; led[3]|=0x100; led[4]|=0x100; led[5]|=0x100
+#define		WORD_UHR			led[9]|=0x100; led[10]|=0x100; led[11]|=0x100
 // Zeile 10
-#define		WORD_EMSYSTECH	led[1]|=0x200; led[2]|=0x200; led[3]|=0x200; led[4]|=0x200; led[5]|=0x200; led[6]|=0x200; led[7]|=0x200; led[8]|=0x200; led[9]|=0x200
 #define     WORD_ALARM1			led[1]|=0x200; led[2]|=0x200; led[3]|=0x200; led[4]|=0x200; led[5]|=0x200; led[6]|=0x200
 #define     WORD_ALARM2			led[1]|=0x200; led[2]|=0x200; led[3]|=0x200; led[4]|=0x200; led[5]|=0x200; led[7]|=0x200
+#define		WORD_NTP			led[9]|=0x200; led[10]|=0x200; led[11]|=0x200
 
-#define		PIC_FRAME				led[0] = 0x3FF; led[1] = 0x201;	led[2]=0x201; led[3]=0x201; led[4]=0x201;	led[5]=0x201; led[6]=0x201; led[7]=0x201; led[8]=0x201; led[9]=0x201; led[10]=0x201; led[11]=0x3FF
 
 /**** Type definitions (typedef) **********************************************/
 
@@ -145,7 +163,7 @@ uint16			led[12];
 uint8			col_cnt;
 uint16			col;
 uint8 			button_mem,up_mem,down_mem,up_mem_al,down_mem_al;
-uint8			hour,minute,second;
+uint8			hour,minute,second,ntp_hour,ntp_minute,ntp_sync,ntp_received;
 uint8           alarm1_hour,alarm1_minute;
 uint8			alarm2_hour,alarm2_minute;
 uint8			alarm;
@@ -164,8 +182,37 @@ uint8_t			eeAlarm1_minute EEMEM = 0;
 uint8_t			eeAlarm2_hour EEMEM = 0;
 uint8_t			eeAlarm2_minute EEMEM = 0;
 
+// define UART vars
+#define				uart_maxstrlen 50
+volatile uint8_t	uart_str_complete=0;
+volatile uint8_t	uart_str_count=0;
+volatile char uart_string[uart_maxstrlen+1]="X";
+volatile char uart_target[uart_maxstrlen+1]="X";
+
 /**** Local function prototypes ***********************************************/
 
+//------------------------------------------------------------------------------
+// Name:		uart_init
+// Function:	UART initialisieren
+//
+// Parameter:
+// Return:
+//------------------------------------------------------------------------------
+void uart_init(void)
+{
+	// Baudrate einstellen (Normaler Modus)
+	UBRRH = (unsigned char) (UBRR_BAUD>>8);
+	UBRRL = (unsigned char) (UBRR_BAUD & 0x0ff);
+	
+	// oder einfacher:
+	// UBRR = UBRR_BAUD;
+
+	// Aktivieren des Empfängers, des Senders und des "Daten empfangen"-Interrupts
+	UCSRB = (1<<RXCIE)|(1<<RXEN)|(1<<TXEN);
+
+	// Einstellen des Datenformats: 8 Datenbits, 1 Stoppbit
+	UCSRC = (1<<URSEL)|(1<<UCSZ1)|(1<<UCSZ0);
+}
 
 
 //------------------------------------------------------------------------------
@@ -347,7 +394,11 @@ void draw_time(void)
 		{
 			WORD_ALARM2;
 		}
-
+		if (ntp_sync == true)
+		{
+			WORD_NTP;
+		}
+		
 	}
 }
 
@@ -361,15 +412,17 @@ void draw_time(void)
 void init(void)
 {
 	// Configure Dataport as output
-	DDRC |= ((1<<PC4) | (1<<PC3) | (1<<PC2) | (1<<PC1) | (1<<PC0));
-	DDRD |= ((1<<PD7) | (1<<PD6) | (1<<PD5) | (1<<PD4));
+	DDRC |= ((1<<PC3) | (1<<PC2) | (1<<PC1) | (1<<PC0));
+	DDRD |= ((1<<PD7) | (1<<PD6) | (1<<PD5) | (1<<PD4) | (1<<PD3));
 	DDRB |= ((1<<PB0) | (1<<PB1) | (1<<PB2) | (1<<PB3) | (1<<PB4));
 	
 	// Configure Dataport as input
 	DDRD &= ~((1<<PD0) | (1<<PD1) | (1<<PD2));
+	DDRC &= ~((1<<PC5) | (1<<PC4));
 
 	// enable internal pullup
 	PORTD |= ((1<<PD0) | (1<<PD1) | (1<<PD2));
+	PORTC |= ((1<<PC5) | (1<<PC4));
 	SFIOR &= (1<<PUD);
 	
 	// Timer 2 mit externem 32kHz Quarz betreiben
@@ -391,6 +444,7 @@ void init(void)
 	minute = 59;
 	second = 0;
 	time_setup = 0;
+	ntp_sync = false;
 	
 	// read from EEPROM
 	alarm1_hour = eeprom_read_byte (&eeAlarm1_hour);
@@ -410,12 +464,13 @@ void init(void)
 //------------------------------------------------------------------------------
 int main(void)
 {
- 	init();  // Initialize
-	sei();	// Interrupt ein	
+ 	init();						// Initialize
+	uart_init();				// USART initialisieren
+	sei();						// Interrupt ein	
 
 	while(1)
 	{
-		if(sec_flag)	//=== 1 Sekunde ===
+		if(sec_flag)			//=== 1 Sekunde ===
 		{
 			sec_flag = false;
 			if(BUTTON)
@@ -424,7 +479,7 @@ int main(void)
 				if(time_setup_cnt1 > 3)
 				{
 					time_setup++;
-					if(time_setup > 6) time_setup = 0;  // Leave settings after all menus 
+					if(time_setup > 6) time_setup = 0;  // Leave settings after all menu steps 
 				}
 			}			
 			else
@@ -467,12 +522,12 @@ int main(void)
 				down_mem = false;
 				time_setup_cnt0 = 0;
 				eeprom_written = false;						// eeprom muss noch geschrieben werden!
-				if(time_setup == 1)	minute = (minute>0) ?minute-1 : 0;
-				if(time_setup == 2) hour = (hour > 0) ? hour-1 :	0;
-				if(time_setup == 3)	alarm1_minute = (alarm1_minute>0) ?alarm1_minute-1 : 0;
-				if(time_setup == 4) alarm1_hour = (alarm1_hour > 0) ? alarm1_hour-1 :	0;
-				if(time_setup == 5)	alarm2_minute = (alarm2_minute>0) ?alarm2_minute-1 : 0;
-				if(time_setup == 6) alarm2_hour = (alarm2_hour > 0) ? alarm2_hour-1 :	0;
+				if(time_setup == 1)	minute = (minute>0) ?minute-1 : 59;
+				if(time_setup == 2) hour = (hour > 0) ? hour-1 :	23;
+				if(time_setup == 3)	alarm1_minute = (alarm1_minute>0) ?alarm1_minute-1 : 59;
+				if(time_setup == 4) alarm1_hour = (alarm1_hour > 0) ? alarm1_hour-1 :	23;
+				if(time_setup == 5)	alarm2_minute = (alarm2_minute>0) ?alarm2_minute-1 : 59;
+				if(time_setup == 6) alarm2_hour = (alarm2_hour > 0) ? alarm2_hour-1 :	23;
 			}
 			if(BUTTON)
 			{
@@ -499,18 +554,19 @@ int main(void)
 			{
 				up_mem_al = false;
 				alarm1_enabled ^= true;
-				PORTC &= ~(1<<PC4);
+				BUZZER_OFF;
 			}
 			
 			if (!DOWN && down_mem_al)
 			{
 				down_mem_al = false;
 				alarm2_enabled ^= true;
-				PORTC &= ~(1<<PC4);
+				BUZZER_OFF;
 			}
 			
 			draw_time();		
 		}
+		
 		// check alarm time = now
 		if ((alarm1_enabled == true) && (alarm1_hour == hour) && (alarm1_minute == minute))
 		{
@@ -524,6 +580,50 @@ int main(void)
 		 {
 			 alarm = false;
 		 }
+		
+		// UART get NTP time from ESP8266
+		if (uart_str_complete == 1)
+		{
+			if ((uart_string[7] == 'S') && (uart_string[8] == 'Y')  && (uart_string[9] == 'S')  && (uart_string[10] == 'T')  && (uart_string[11] == 'I')  && (uart_string[12] == 'M')  && (uart_string[13] == 'E'))
+			{
+			ntp_hour = (uart_string[15] - '0') * 10 + (uart_string[16] - '0');
+			ntp_minute = (uart_string[18] - '0') * 10 + (uart_string[19] - '0');
+			ntp_received = true;
+			}
+			uart_str_complete=0;
+		}
+		
+		// Check if NTP time in sync with local time
+		if ((ntp_hour != hour) | (ntp_minute != minute))
+		{
+			if (ntp_received == true)
+			{
+			hour = ntp_hour;
+			minute = ntp_minute;
+			ntp_sync = true;
+			ntp_received = false;
+			} else {
+				ntp_sync = false;
+			}
+		} 
+		
+		// Alarm tone
+		if (alarm == true)
+		{
+			if (beep < 50)
+			{
+				BUZZER_ON;
+			}
+			else if (beep > 50)
+				{
+				BUZZER_OFF;
+				//beep = 0;
+			}
+		}
+		if (beep > 900)
+		{
+			beep = 0;
+		}
 		
 	}
 }
@@ -553,6 +653,49 @@ ISR(TIMER2_OVF_vect)
 	sec_flag = true;
 }
 
+
+//------------------------------------------------------------------------------
+// Name:      USART_RXC_vect
+// Function:  Interrupt wird ausgelöst sobald neue Daten im USART-Empfangspuffer liegen
+//
+// Parameter:
+// Return:
+//------------------------------------------------------------------------------
+ISR(USART_RXC_vect)
+{
+	unsigned char buffer;
+	buffer = UDR;
+	if ( uart_str_complete == 0 )
+	{
+		if  (buffer!='\n' && buffer!= '\r' && uart_str_count<uart_maxstrlen-1)
+		{
+			uart_string[uart_str_count] = buffer;
+			uart_str_count++;
+		}
+		else
+		{
+			uart_string[uart_str_count] = '\0';
+			uart_str_count = 0;
+			uart_str_complete = 1;
+		}
+	}
+	
+	// Daten aus dem Puffer lesen ...
+	//if (UDR == '\n')
+	//{
+	//	receive_UART[uart_count++] = '\0';
+		//strcpy(copy_UART,receive_UART);
+	//	uart_count = 0;
+	//	uart_data = true;
+	//} else {
+	//receive_UART[uart_count++] = UDR;
+	//}
+	
+
+	// ... warten bis der Sendepuffer leer ist ...
+	//while ( !( UCSRA & (1<<UDRE)) );
+}
+
 //------------------------------------------------------------------------------
 // Name:      TIMER1_COMPA_vect
 // Function:  LED-Matrix Refresh mit 1,2kHz -> 100Hz Bildwiderholrate
@@ -575,18 +718,25 @@ ISR(TIMER1_COMPA_vect)
 	CLK_SET;
 	CLK_CLR;
 
-	PORTC &= ~0x0F;
-	PORTD &= ~0xF0;
-	PORTB &= ~0x03;
+	//PORTC &= ~0x0F;
+	//PORTC &= ~0#b00001111;
+	PORTC &= ~((1<<PC3) | (1<<PC2) | (1<<PC1) | (1<<PC0));
+	//PORTD &= ~0xF0;
+	//PORTD &= ~0b11110000;
+	PORTD &= ~((1<<PD7) | (1<<PD6) | (1<<PD5) | (1<<PD4));
+	//PORTB &= ~0x03;
+	//PORTB &= ~0b00000011;
+	PORTB &= ~((1<<PB1) | (1<<PB0));
 
 	STROBE_SET;
 	STROBE_CLR;
 
 	col = led[col_cnt];
 
-	PORTC |= col & 0x0F;
-	PORTD |= col & 0xF0;
-	PORTB |= (col >> 8) & 0x03;
+	//PORTC |= col & 0x0F;
+	PORTC |= col & ((1<<PC3) | (1<<PC2) | (1<<PC1) | (1<<PC0));	
+	PORTD |= col & ((1<<PD7) | (1<<PD6) | (1<<PD5) | (1<<PD4));
+	PORTB |= (col >> 8) & ((1<<PB1) | (1<<PB0));
 	
 	// Entprellen der Taster
 	key_cnt++;
@@ -596,23 +746,10 @@ ISR(TIMER1_COMPA_vect)
 		key_cnt=0;
 	}
 	
-	// Alarm tone
-		if (alarm == true)
-		{
-			if (beep < 100)
-			{
-			PORTC ^= (1<<PC4);
-			beep++;	
-			} 
-			else if (beep > 800)
-			{
-			beep = 0;	
-			} else {
-			PORTC &= ~(1<<PC4);	
-			beep++;
-			}
+	// Zähler für Alarmton
+	beep++;
 	
-		}
+	
 		
 }
 
