@@ -6,7 +6,7 @@
 Das hier vorgestellte Projekt basiert auf dem Retro Ping-Pong Spiel von Franzis.
 Dabei wird die Uhrzeit als Text dargestellt.
 Der Basiscode wurde um ein paar Funktionen erweitert, sodass es jetzt möglich ist, 
-2 Weckzeiten zu definieren. Als Weckton wird ein 1,2KHz Ton erzeugt.
+2 Weckzeiten zu definieren.
 Über 3 Tasten kann die Uhrzeit und die Weckzeiten eingestellt werden.
 Im nomalen Modus kann mit der UP-Taste der Alarm 1 und der DOWN-Taste der Alarm 2 
 An- und Ausgeschaltet werden.
@@ -16,8 +16,33 @@ An- und Ausgeschaltet werden.
 * 3 Taster
 * Piezo Signalgeber
 * Stiftleiste z.B. für ISP, Taster, Piezo und Vcc
+* für NTP Zeit ein ESP8266 Modul mit UART Schnittstelle 5V !
 
 ## Installation
+Für die Erweiterung mit ESP8266 Modul.
+Hierfür verwende ich die ESP EASY Firmware und Rules.
+Bei mir verwendete Version: R142_RC5
+Infos zu ESP EASY: http://www.letscontrolit.com/
+Dazu muss unter: 
+* Tools --> Advanced --> Rules aktiviert werden.
+* Baud Rate auf 9600 Baud.
+* Serial Loglevel auf 4 
+*Unter Rules folgenden Code einfügen:
+```
+On System#Boot do    //When the ESP boots, do
+timerSet,1,20      //Set Timer 1 for the next event in 60 seconds
+endon
+On Rules#Timer=1 do  //When Timer1 expires, do
+SYSTIME:%systime%
+pulse,0,1,500
+timerSet,1,20    //Set Timer 1 for the next event in 60 second
+endon
+```
+Damit wird alle 20 Sekunden ein String "SYSTIME" erzeugt und die NTP Zeit über UART mit 9600 Baud 8N1 ausgegeben.
+Der Controller prüft, ob die interne Uhr gleich der NTP Zeit ist. Falls dies abweicht, wird NTP in der Anzeige ausgeblendet.
+Sobald ein gültiges NTP Signal empfangen wird (über UART) wird die Uhrzeit gesetzt und NTP in der Anzeige leuchtet auf.
+Der Wecker kann natürlich auch ohne das ESP8266 Modul benutzt werden.
+
 ## Bauteile
 B6 und B7 = Uhrenquarz  
 C4 = Taster UP  
