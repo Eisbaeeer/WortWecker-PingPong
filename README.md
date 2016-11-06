@@ -109,8 +109,7 @@ Mit langen Druck auf den Taster PD2 kommt man in die Einstellungen. Das Menü si
 Die Druckvorlage ist mit dem Tool "Gimp2" erstellt. Diese ist unter resources zu finden.
 
 ## ToDo
-Ich habe noch geplant, die Uhrzeit per ESP8266 mit NTP zu synchronisieren.  
-Die ganze Elektronik wird dann noch in einen ordentlichen Rahmen (z.B. Ikea) eingebaut und mit Difusor, Separator und Glasfront verschönert.
+Die ganze Elektronik wird dann in einen ordentlichen Rahmen (z.B. Ikea) eingebaut und mit Difusor, Separator und Glasfront verschönert.
 
 ## Contributing
 1. Fork it!
@@ -140,6 +139,13 @@ Added EEPROM to save alarm times
 * 09.10.2016 ver.0.0.4  
 Changed to 24h clock  
 Bugfix alarm
+* 03.11.2016 ver.0.0.5
+- Changed pins to get the UART ports free
+* 03.11.2016 ver.0.0.6
+- add UART for NTP
+* 06.11.2016 ver.0.0.7
+- add NTP sync
+- Bugfix time & alarm setting
 
 ## Quellen
 Schaltplan: http://www.elo-web.de/xattachment/0911PingPongSchaltbild.jpg  
