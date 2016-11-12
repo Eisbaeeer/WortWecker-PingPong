@@ -49,7 +49,7 @@ C4 = Taster UP
 C5 = Taster DOWN  
 D2 = Taster Stellen  
 D0 = UART RXD an ESP8266 Modul (NTP)   
-D1 = UART TXD an ESP8266 Modul (NTP)
+D1 = UART TXD an ESP8266 Modul (NTP)  
 D3 = Piezo Signalgeber
 ## Compiler
 Compiliert wurde das ganze im Atmel Studio 7 (7.0.1006)
