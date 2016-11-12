@@ -54,6 +54,8 @@
 // History:		06.11.2016 ver.0.0.7
 //				- add NTP sync
 //				- Bugfix time & alarm setting
+// History:		12.11.2016 ver.0.0.8
+//				- Bugfix get hour from ESP (digit < 10)
 //
 //------------------------------------------------------------------------------
 
@@ -586,9 +588,16 @@ int main(void)
 		{
 			if ((uart_string[7] == 'S') && (uart_string[8] == 'Y')  && (uart_string[9] == 'S')  && (uart_string[10] == 'T')  && (uart_string[11] == 'I')  && (uart_string[12] == 'M')  && (uart_string[13] == 'E'))
 			{
+			if (uart_string[15] == ' ')
+			{
+				ntp_hour = (uart_string[16] - '0');
+				ntp_minute = (uart_string[18] - '0') * 10 + (uart_string[19] - '0');
+				ntp_received = true;
+			} else {
 			ntp_hour = (uart_string[15] - '0') * 10 + (uart_string[16] - '0');
 			ntp_minute = (uart_string[18] - '0') * 10 + (uart_string[19] - '0');
 			ntp_received = true;
+			 }
 			}
 			uart_str_complete=0;
 		}
