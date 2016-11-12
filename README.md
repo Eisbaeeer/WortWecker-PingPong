@@ -5,7 +5,7 @@
 # Wort Wecker PingPong
 Das hier vorgestellte Projekt basiert auf dem Retro Ping-Pong Spiel von Franzis.
 Dabei wird die Uhrzeit als Text dargestellt.
-Der Basiscode wurde um ein paar Funktionen erweitert, sodass es jetzt möglich ist, 
+Der Basiscode wurde um ein Funktionen erweitert, sodass es jetzt möglich ist, 
 2 Weckzeiten zu definieren.
 Über 3 Tasten kann die Uhrzeit und die Weckzeiten eingestellt werden.
 Im nomalen Modus kann mit der UP-Taste der Alarm 1 und der DOWN-Taste der Alarm 2 
@@ -48,8 +48,8 @@ B6 und B7 = Uhrenquarz
 C4 = Taster UP  
 C5 = Taster DOWN  
 D2 = Taster Stellen  
-D0 = (RXD) geplant für NTP  
-D1 = (TXD) geplant für NTP  
+D0 = UART RXD an ESP8266 Modul (NTP)   
+D1 = UART TXD an ESP8266 Modul (NTP)
 D3 = Piezo Signalgeber
 ## Compiler
 Compiliert wurde das ganze im Atmel Studio 7 (7.0.1006)
