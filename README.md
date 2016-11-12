@@ -171,6 +171,8 @@ add UART for NTP
 * 06.11.2016 ver.0.0.7  
 add NTP sync  
 Bugfix time & alarm setting  
+* 12.11.2016 ver.0.0.8  
+Bugfix NTP - hour < 10
 
 ## Quellen
 Schaltplan: http://www.elo-web.de/xattachment/0911PingPongSchaltbild.jpg  
