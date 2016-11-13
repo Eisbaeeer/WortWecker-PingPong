@@ -1,4 +1,4 @@
-![Logo](resources/logo.png)
+![Logo](resources/WortWecker-Ikea.jpg)
 
 =======================
 
@@ -132,9 +132,7 @@ Mit langen Druck auf den Taster PD2 kommt man in die Einstellungen. Das Menü si
 
 ## Druckvorlage
 Die Druckvorlage ist mit dem Tool "Gimp2" erstellt. Diese ist unter resources zu finden.
-
-## ToDo
-Die ganze Elektronik wird dann in einen ordentlichen Rahmen (z.B. Ikea) eingebaut und mit Difusor, Separator und Glasfront verschönert.
+![Druckvorlage](resources/logo.png)
 
 ## Contributing
 1. Fork it!
