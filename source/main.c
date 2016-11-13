@@ -56,6 +56,8 @@
 //				- Bugfix time & alarm setting
 // History:		12.11.2016 ver.0.0.8
 //				- Bugfix get hour from ESP (digit < 10)
+// History:		13.11.2016 ver.0.0.9
+//				- add LED init (10sec. on)
 //
 //------------------------------------------------------------------------------
 
@@ -99,6 +101,7 @@
 //=== Pixels ===
 
 #define		CLEAR_ALL			led[0]=0; led[1]=0; led[2]=0; led[3]=0;	led[4]=0; led[5]=0; led[6]=0; led[7]=0; led[8]=0;	led[9]=0; led[10]=0; led[11]=0
+#define		LIGHT_ALL			led[0]=0xfff; led[1]=0xfff; led[2]=0xfff; led[3]=0xfff;	led[4]=0xfff; led[5]=0xfff; led[6]=0xfff; led[7]=0xfff; led[8]=0xfff; led[9]=0xfff; led[10]=0xfff; led[11]=0xfff 
 
 // Zeile 1
 #define		WORD_ES_IST			led[0]|=1; led[1]|=1; led[4]|=1; led[5]|=1; led[6]|=1
@@ -178,6 +181,8 @@ uint8			key_cnt;
 uint16			loop_cnt;
 uint8			sec_flag,key_flag;
 uint8			eeprom_written;
+uint8			display_init,display_light;
+
 // define eeprom bytes
 uint8_t			eeAlarm1_hour EEMEM = 0;
 uint8_t			eeAlarm1_minute EEMEM = 0;
@@ -400,6 +405,10 @@ void draw_time(void)
 		{
 			WORD_NTP;
 		}
+		if (display_init == true)
+		{
+			LIGHT_ALL;
+		}
 		
 	}
 }
@@ -447,6 +456,8 @@ void init(void)
 	second = 0;
 	time_setup = 0;
 	ntp_sync = false;
+	display_init = true;
+	display_light = 0;
 	
 	// read from EEPROM
 	alarm1_hour = eeprom_read_byte (&eeAlarm1_hour);
@@ -498,6 +509,15 @@ int main(void)
 			eeprom_write_byte(&eeAlarm2_minute, alarm2_minute);
 			}
 			
+			}
+			if (display_init)
+			{
+				if (display_light < 10)
+				{
+					display_light++;
+				} else {
+					display_init = false;
+				}
 			}
 			draw_time();
 		}
