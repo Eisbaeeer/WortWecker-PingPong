@@ -172,7 +172,10 @@ Bugfix time & alarm setting
 * 12.11.2016 ver.0.0.8  
 Bugfix NTP - hour < 10
 * 13.11.2016 ver.0.0.9
-add light up all LED for 10 sec. by init
+add light up all LED for 10 sec. by init   
+* 20.11.2016 ver.1.0.0   
+Bugfix display word_12 on 24h   
+first release   
 
 ## Quellen
 Schaltplan: http://www.elo-web.de/xattachment/0911PingPongSchaltbild.jpg  
