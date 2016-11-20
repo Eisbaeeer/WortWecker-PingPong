@@ -171,8 +171,8 @@ add NTP sync
 Bugfix time & alarm setting  
 * 12.11.2016 ver.0.0.8  
 Bugfix NTP - hour < 10
-* 13.11.2016 ver.0.0.9
-add light up all LED for 10 sec. by init   
+* 13.11.2016 ver.0.0.9   
+add light up all LED for 10 sec. by init (to place mask)     
 * 20.11.2016 ver.1.0.0   
 Bugfix display word_12 on 24h   
 first release   
