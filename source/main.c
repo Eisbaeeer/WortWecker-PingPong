@@ -58,6 +58,12 @@
 //				- Bugfix get hour from ESP (digit < 10)
 // History:		13.11.2016 ver.0.0.9
 //				- add LED init (10sec. on)
+// History:		15.11.2016 ver.0.9.0
+//				- changed down==alarm1, up==alarm2
+//				- cleaning code
+// History:		20.11.2016 ver.1.0.0
+//				- bugfix display 24h
+//				- first release
 //
 //------------------------------------------------------------------------------
 
@@ -355,18 +361,18 @@ void draw_time(void)
 		WORD_UHR;
 
 		h = 0;
-		if(     minute <   5)	{	                            					h = hour; }
-		else if(minute <  10)	{	WORD_FUENF;   WORD_NACH; 							h = hour; }
-		else if(minute <  15)	{	WORD_ZEHN;    WORD_NACH; 							h = hour; }
-		else if(minute <  20)	{	WORD_VIERTEL; WORD_NACH; 							h = hour; }
+		if(     minute <   5)	{	                                   		h = hour; }
+		else if(minute <  10)	{	WORD_FUENF;   WORD_NACH; 				h = hour; }
+		else if(minute <  15)	{	WORD_ZEHN;    WORD_NACH; 				h = hour; }
+		else if(minute <  20)	{	WORD_VIERTEL; WORD_NACH; 				h = hour; }
 		else if(minute <  25)	{	WORD_ZEHN;  	WORD_VOR_1;	WORD_HALB;	h = hour + 1; }
 		else if(minute <  30)	{	WORD_FUENF;   WORD_VOR_1; WORD_HALB;	h = hour + 1; }
-		else if(minute <  35)	{	WORD_HALB;  													h = hour + 1; }
+		else if(minute <  35)	{	WORD_HALB;  							h = hour + 1; }
 		else if(minute <  40)	{	WORD_FUENF; 	WORD_NACH; 	WORD_HALB;	h = hour + 1; }
 		else if(minute <  45)	{	WORD_ZEHN; 		WORD_NACH; 	WORD_HALB;	h = hour + 1; }
-		else if(minute <  50)	{	WORD_VIERTEL;	WORD_VOR_2;							h = hour + 1; }
-		else if(minute <  55)	{	WORD_ZEHN; 		WORD_VOR_1;							h = hour + 1; }
-		else if(minute <  60)	{	WORD_FUENF; 	WORD_VOR_1;							h = hour + 1; }
+		else if(minute <  50)	{	WORD_VIERTEL;	WORD_VOR_2;				h = hour + 1; }
+		else if(minute <  55)	{	WORD_ZEHN; 		WORD_VOR_1;				h = hour + 1; }
+		else if(minute <  60)	{	WORD_FUENF; 	WORD_VOR_1;				h = hour + 1; }
 
 		if(     h ==  0) { WORD_12; }
 		else if(h ==  1) { WORD_1;  }
@@ -392,6 +398,7 @@ void draw_time(void)
 		else if(h == 21) { WORD_9;	}
 		else if(h == 22) { WORD_10;	}
 		else if(h == 23) { WORD_11;	}
+		else if(h == 24) { WORD_12;	}
 			
 		if (alarm1_enabled == true)
 		{
@@ -575,14 +582,14 @@ int main(void)
 			if (!UP && up_mem_al)
 			{
 				up_mem_al = false;
-				alarm1_enabled ^= true;
+				alarm2_enabled ^= true;
 				BUZZER_OFF;
 			}
 			
 			if (!DOWN && down_mem_al)
 			{
 				down_mem_al = false;
-				alarm2_enabled ^= true;
+				alarm1_enabled ^= true;
 				BUZZER_OFF;
 			}
 			
@@ -644,7 +651,7 @@ int main(void)
 				BUZZER_ON;
 			}
 			else if (beep > 50)
-				{
+			{
 				BUZZER_OFF;
 				//beep = 0;
 			}
@@ -709,20 +716,6 @@ ISR(USART_RXC_vect)
 		}
 	}
 	
-	// Daten aus dem Puffer lesen ...
-	//if (UDR == '\n')
-	//{
-	//	receive_UART[uart_count++] = '\0';
-		//strcpy(copy_UART,receive_UART);
-	//	uart_count = 0;
-	//	uart_data = true;
-	//} else {
-	//receive_UART[uart_count++] = UDR;
-	//}
-	
-
-	// ... warten bis der Sendepuffer leer ist ...
-	//while ( !( UCSRA & (1<<UDRE)) );
 }
 
 //------------------------------------------------------------------------------
@@ -747,14 +740,8 @@ ISR(TIMER1_COMPA_vect)
 	CLK_SET;
 	CLK_CLR;
 
-	//PORTC &= ~0x0F;
-	//PORTC &= ~0#b00001111;
 	PORTC &= ~((1<<PC3) | (1<<PC2) | (1<<PC1) | (1<<PC0));
-	//PORTD &= ~0xF0;
-	//PORTD &= ~0b11110000;
 	PORTD &= ~((1<<PD7) | (1<<PD6) | (1<<PD5) | (1<<PD4));
-	//PORTB &= ~0x03;
-	//PORTB &= ~0b00000011;
 	PORTB &= ~((1<<PB1) | (1<<PB0));
 
 	STROBE_SET;
@@ -762,7 +749,6 @@ ISR(TIMER1_COMPA_vect)
 
 	col = led[col_cnt];
 
-	//PORTC |= col & 0x0F;
 	PORTC |= col & ((1<<PC3) | (1<<PC2) | (1<<PC1) | (1<<PC0));	
 	PORTD |= col & ((1<<PD7) | (1<<PD6) | (1<<PD5) | (1<<PD4));
 	PORTB |= (col >> 8) & ((1<<PB1) | (1<<PB0));
@@ -777,7 +763,6 @@ ISR(TIMER1_COMPA_vect)
 	
 	// Zähler für Alarmton
 	beep++;
-	
 	
 		
 }
