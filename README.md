@@ -182,6 +182,9 @@ add light up all LED for 10 sec. by init (to place mask)
 * 20.11.2016 ver.1.0.0   
 Bugfix display word_12 on 24h   
 first release   
+* 19.11.2017 ver.1.1.0
+Bugfix Piezo
+New feature - piezo or permanent signal
 
 ## Quellen
 Schaltplan: http://www.elo-web.de/xattachment/0911PingPongSchaltbild.jpg  
