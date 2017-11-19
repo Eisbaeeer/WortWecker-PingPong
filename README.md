@@ -130,6 +130,12 @@ avrdude done.  Thank you.
 Mit langen Druck auf den Taster PD2 kommt man in die Einstellungen. Das Menü sieht wie folgt aus:
 ![Alt text](resources/menu.png)
 
+Beim anlegen der Spannung erleuchten alle LED´s für etwa 10 Sekunden. Während dieser Zeit kann der Modus für den Alarm-Ausgang geändert werden.
+Wird während dieser Zeit der "Hoch" Knopf gedrückt, kann man an den Ausgang einen Piezo anschließen. Dieser wird dann gepulst. Drückt man den 
+"Runter" Knopf, ist der Ausgang im Modus Dauersignal. Damit könnte man dann z.B. einen MP3 Player anschließen (Danke an Reimund für die Idee).
+Der Modus wird im EEProm abgespeichert. Man sieht nach den ersten 10 Sekunden dauerleuchten der LED´s anschließend für 4 Sekunden den Modus.
+Dabei bedeutet gestrichelte Linie = Piezo, durchgezogene Linie = permanentes Signal. 
+
 ## Druckvorlage
 Die Druckvorlage ist mit dem Tool "Gimp2" erstellt. Diese ist unter resources zu finden.
 ![Druckvorlage](resources/logo.png)

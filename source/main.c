@@ -64,6 +64,14 @@
 // History:		20.11.2016 ver.1.0.0
 //				- bugfix display 24h
 //				- first release
+// History:		18.11.2017 ver.1.1.0
+//				- bugfix alarm (>= instead of >)
+//				- added feature to change between piezo and permanent HIGH on output
+//				* this can be used to connect an MP3 as example.
+//				* you can change between piezo and permanent mode on startup. Press Menu button during test-sceen on the bootup procedure
+//				* after boot test you will see the mode.
+//				* points = piezo
+//				* line = permanent
 //
 //------------------------------------------------------------------------------
 
@@ -73,6 +81,7 @@
 #include <avr/interrupt.h>
 #include "std_c.h"
 #include <avr/eeprom.h>
+#include <util/delay.h>
 
 /**** Preprocessing directives (#define) **************************************/
 
@@ -125,6 +134,9 @@
 #define		WORD_5				led[0]|=0x10; led[1]|=0x10; led[2]|=0x10; led[3]|=0x10
 #define		WORD_2				led[6]|=0x10; led[7]|=0x10; led[8]|=0x10; led[9]|=0x10
 #define		WORD_1				led[8]|=0x10; led[9]|=0x10; led[10]|=0x10; led[11]|=0x10
+#define		ALARM_PIEZO			led[0]|=0x10; led[1]|=0x10; led[4]|=0x10; led[5]|=0x10; led[8]|=0x10; led[9]|=0x10
+#define		ALARM_PERMA			led[0]|=0x10; led[1]|=0x10; led[2]|=0x10; led[3]|=0x10; led[4]|=0x10; led[5]|=0x10; led[6]|=0x10; led[7]|=0x10; led[8]|=0x10; led[9]|=0x10; led[10]|=0x10; led[11]|=0x10
+
 // Zeile 6
 #define		WORD_7				led[0]|=0x20; led[1]|=0x20; led[2]|=0x20; led[3]|=0x20; led[4]|=0x20; led[5]|=0x20
 #define		WORD_6				led[7]|=0x20; led[8]|=0x20; led[9]|=0x20; led[10]|=0x20; led[11]|=0x20
@@ -178,6 +190,7 @@ uint8			hour,minute,second,ntp_hour,ntp_minute,ntp_sync,ntp_received;
 uint8           alarm1_hour,alarm1_minute;
 uint8			alarm2_hour,alarm2_minute;
 uint8			alarm;
+uint8			alarm_mode;
 uint16			beep;
 uint8			alarm1_enabled,alarm2_enabled;
 uint8			time_setup;
@@ -194,6 +207,7 @@ uint8_t			eeAlarm1_hour EEMEM = 0;
 uint8_t			eeAlarm1_minute EEMEM = 0;
 uint8_t			eeAlarm2_hour EEMEM = 0;
 uint8_t			eeAlarm2_minute EEMEM = 0;
+uint8_t			eeAlarm_mode EEMEM = 0;
 
 // define UART vars
 #define				uart_maxstrlen 50
@@ -464,6 +478,8 @@ void init(void)
 	time_setup = 0;
 	ntp_sync = false;
 	display_init = true;
+	alarm_mode = 0;
+	alarm = false;
 	display_light = 0;
 	
 	// read from EEPROM
@@ -471,7 +487,7 @@ void init(void)
 	alarm1_minute = eeprom_read_byte (&eeAlarm1_minute);
 	alarm2_hour = eeprom_read_byte (&eeAlarm2_hour);
 	alarm2_minute = eeprom_read_byte (&eeAlarm2_minute);
-	
+	alarm_mode = eeprom_read_byte (&eeAlarm_mode);
 	
 	alarm = false;
 	alarm1_enabled = true;
@@ -522,7 +538,31 @@ int main(void)
 				if (display_light < 10)
 				{
 					display_light++;
+					// Change alarm mode at bootup
+					if (UP)
+					{
+						alarm_mode = 0;		// Piezo
+						eeprom_write_byte(&eeAlarm_mode, alarm_mode);
+					}
+					if (DOWN)
+					{
+						alarm_mode = 1;		// Permanent
+						eeprom_write_byte(&eeAlarm_mode, alarm_mode);
+					}
+					
 				} else {
+					// Display alarm_mode for 4 sec.
+					if (alarm_mode == 0)
+					{
+						CLEAR_ALL;
+						ALARM_PIEZO;
+					}
+					if (alarm_mode == 1)
+					{
+						CLEAR_ALL;
+						ALARM_PERMA;
+					}
+					_delay_ms(4000);
 					display_init = false;
 				}
 			}
@@ -646,21 +686,28 @@ int main(void)
 		// Alarm tone
 		if (alarm == true)
 		{
-			if (beep < 50)
+			if (alarm_mode == 0)  // Piezo
 			{
-				BUZZER_ON;
+				if (beep <= 50)
+				{
+					BUZZER_ON;
+				}
+				else if (beep >= 50)
+				{
+					BUZZER_OFF;
+				}
 			}
-			else if (beep > 50)
+			if (beep >= 900)
 			{
-				BUZZER_OFF;
-				//beep = 0;
+				beep = 0;
 			}
-		}
-		if (beep > 900)
-		{
-			beep = 0;
-		}
 		
+			if (alarm_mode == 1)  // Permanent
+
+			{					
+							BUZZER_ON;
+		 }
+		}
 	}
 }
 
