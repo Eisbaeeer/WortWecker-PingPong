@@ -187,7 +187,8 @@ Bugfix Piezo
 New feature - piezo or permanent signal   
 
 ## Quellen
-Schaltplan: http://www.elo-web.de/xattachment/0911PingPongSchaltbild.jpg  
+Schaltplan: https://github.com/Eisbaeeer/WortWecker-PingPong/blob/master/resources/PingPongSchaltbild.jpg  
+Platine: https://github.com/Eisbaeeer/WortWecker-PingPong/blob/master/resources/PingPongPlatine.jpg
 Ursprungs C-Code: www.emsystech.de  
  
 ## License
