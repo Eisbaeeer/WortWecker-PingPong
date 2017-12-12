@@ -188,7 +188,7 @@ New feature - piezo or permanent signal
 
 ## Quellen
 Schaltplan: https://github.com/Eisbaeeer/WortWecker-PingPong/blob/master/resources/PingPongSchaltbild.jpg  
-Platine: https://github.com/Eisbaeeer/WortWecker-PingPong/blob/master/resources/PingPongPlatine.jpg
+Platine: https://github.com/Eisbaeeer/WortWecker-PingPong/blob/master/resources/PingPongPlatine.jpg   
 Ursprungs C-Code: www.emsystech.de  
  
 ## License
