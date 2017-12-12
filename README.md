@@ -161,7 +161,6 @@ avrdude: verifying ...
 avrdude: 5886 bytes of flash verified
 
 avrdude done.  Thank you.
-```
 
 ## Benutzung
 Mit langen Druck auf den Taster PD2 kommt man in die Einstellungen. Das Menü sieht wie folgt aus:
