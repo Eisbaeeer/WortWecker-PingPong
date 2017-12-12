@@ -126,8 +126,7 @@ avrdude: safemode: Fuses OK
 avrdude done.  Thank you.
 ```
 # Hochladen des Codes mit avrdude
-Hier im Beispiel liegt die Hex Datei im gleichen Verzeichnis wie avrdude.exe
-```
+Hier im Beispiel liegt die Hex Datei im gleichen Verzeichnis wie avrdude.exe   
 avrdude -c USBasp -p Atmega8 –u –U flash:w:PingPong_Word_Clock_LWe.hex
 ```
 avrdude: AVR device initialized and ready to accept instructions
@@ -161,6 +160,7 @@ avrdude: verifying ...
 avrdude: 5886 bytes of flash verified
 
 avrdude done.  Thank you.
+```
 
 ## Benutzung
 Mit langen Druck auf den Taster PD2 kommt man in die Einstellungen. Das Menü sieht wie folgt aus:
