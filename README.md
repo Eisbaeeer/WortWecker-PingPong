@@ -125,6 +125,43 @@ avrdude: safemode: Fuses OK
 
 avrdude done.  Thank you.
 ```
+# Hochladen des Codes mit avrdude
+Hier im Beispiel liegt die Hex Datei im gleichen Verzeichnis wie avrdude.exe
+```
+avrdude -c USBasp -p Atmega8 –u –U flash:w:PingPong_Word_Clock_LWe.hex
+```
+avrdude: AVR device initialized and ready to accept instructions
+
+Reading | ################################################## | 100% 0.05s
+
+avrdude: Device signature = 0x1e9307
+avrdude: NOTE: FLASH memory has been specified, an erase cycle will be performed
+         To disable this feature, specify the -D option.
+avrdude: erasing chip
+avrdude: reading input file "PingPong_Word_Clock_LWe.hex"
+avrdude: input file PingPong_Word_Clock_LWe.hex auto detected as Intel Hex
+avrdude: writing flash (5886 bytes):
+
+Writing | ################################################## | 100% 2.82s
+
+
+
+avrdude: 5886 bytes of flash written
+avrdude: verifying flash memory against PingPong_Word_Clock_LWe.hex:
+avrdude: load data flash data from input file PingPong_Word_Clock_LWe.hex:
+avrdude: input file PingPong_Word_Clock_LWe.hex auto detected as Intel Hex
+avrdude: input file PingPong_Word_Clock_LWe.hex contains 5886 bytes
+avrdude: reading on-chip flash data:
+
+Reading | ################################################## | 100% 1.86s
+
+
+
+avrdude: verifying ...
+avrdude: 5886 bytes of flash verified
+
+avrdude done.  Thank you.
+```
 
 ## Benutzung
 Mit langen Druck auf den Taster PD2 kommt man in die Einstellungen. Das Menü sieht wie folgt aus:
